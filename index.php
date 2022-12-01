@@ -75,17 +75,39 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
     }
   </style>
 
-  <?php
-
-    foreach($hotels as $hotelList) {
-      foreach($hotelList as $hotel) {
-        echo $hotel;
-      }
-    }
-
-  ?>
 
 
+
+    <!-- // foreach($hotels as $hotelList) {
+    //   foreach($hotelList as $hotel) {
+    //     echo $hotel;
+    //   }
+    // } -->
+
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nome</th>
+      <th scope="col">Descrizione</th>
+      <th scope="col">Parcheggio</th>
+      <th scope="col">stelle</th>
+      <th scope="col">Distanza dal centro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach($hotels as $hotelList):?>
+    <tr>
+      <th scope="row"><?php echo $hotelList['name'] ?></th>
+      <td><?php echo $hotelList['description'] ?></td>
+      <td><?php echo $hotelList['parking'] ?></td>
+      <td><?php echo $hotelList['vote'] ?></td>
+      <td><?php echo $hotelList['distance_to_center'] ?></td>
+    </tr>
+     <?php endforeach; ?>
+  </tbody>
+</table>
 
 </body>
 </html>
