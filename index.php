@@ -53,6 +53,9 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
 
     ];
 
+
+
+   
 ?>
 
 <!DOCTYPE html>
@@ -75,16 +78,12 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
     }
   </style>
 
-
-
-
-    <!-- // foreach($hotels as $hotelList) {
-    //   foreach($hotelList as $hotel) {
-    //     echo $hotel;
-    //   }
-    // } -->
-
-
+<form action="./index.php" method="GET">
+  <input type="radio" name="no_parking" id="senza parcheggio" value="senza parcheggio">
+  <label for="senza parcheggio">senza parcheggio</label>
+  <input type="radio" name="parking" id="con parcheggio" value="con parcheggio">
+  <label for="con parcheggio">con parcheggio</label>
+</form>
 
 <table class="table">
   <thead>
@@ -101,7 +100,7 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
     <tr>
       <th scope="row"><?php echo $hotelList['name'] ?></th>
       <td><?php echo $hotelList['description'] ?></td>
-      <td><?php echo $hotelList['parking'] ?></td>
+      <td><?php echo $hotelList['parking'] ? 'Si' : 'No' ?></td>
       <td><?php echo $hotelList['vote'] ?></td>
       <td><?php echo $hotelList['distance_to_center'] ?></td>
     </tr>
