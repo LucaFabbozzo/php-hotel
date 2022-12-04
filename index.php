@@ -56,50 +56,75 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
     //di default l'elenco filtrato che circlero' in pagina comprende tutto l'array
     $filteredhotels = $hotels;
 
-    // var_dump($_SERVER);
-    //var_dump($_GET);
-
-    // verifico se è presnte il dato in $_GET['parking']
+  //   // var_dump($_SERVER);
+  //   //var_dump($_GET);
 
 
-    if(!empty($_GET['parking'])) {
-      // creare array temporaneo dove salvare l'array filtrato
-      $temp_hotels = [];
-      // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
-      foreach ($filteredhotels as $hotel) {
-        if ($hotel['parking']) $temp_hotels[] = $hotel;
-        }
-      //sostituire $filteredhotels con l'array temporaneo
-      $filteredhotels = $temp_hotels;
-    }
+  //MODALITA' SENZA FUNZIONI
+  //   // verifico se è presnte il dato in $_GET['parking']
 
-    //se ho scelto senza parcheggio verifico l'esistenza del parametro parking in GET e che sia pero' vuoto
-      if(isset($_GET['parking']) && empty($_GET['parking'])) {
-      // creare array temporaneo dove salvare l'array filtrato
-      $temp_hotels = [];
-      // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
-      foreach ($filteredhotels as $hotel) {
-        if (!$hotel['parking']) $temp_hotels[] = $hotel;
-        }
-      //sostituire $filteredhotels con l'array temporaneo
-      $filteredhotels = $temp_hotels;
-    }
 
+  //   if(!empty($_GET['parking'])) {
+  //     // creare array temporaneo dove salvare l'array filtrato
+  //     $temp_hotels = [];
+  //     // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
+  //     foreach ($filteredhotels as $hotel) {
+  //       if ($hotel['parking']) $temp_hotels[] = $hotel;
+  //       }
+  //     //sostituire $filteredhotels con l'array temporaneo
+  //     $filteredhotels = $temp_hotels;
+  //   }
+
+  //   //se ho scelto senza parcheggio verifico l'esistenza del parametro parking in GET e che sia pero' vuoto
+  //     if(isset($_GET['parking']) && empty($_GET['parking'])) {
+  //     // creare array temporaneo dove salvare l'array filtrato
+  //     $temp_hotels = [];
+  //     // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
+  //     foreach ($filteredhotels as $hotel) {
+  //       if (!$hotel['parking']) $temp_hotels[] = $hotel;
+  //       }
+  //     //sostituire $filteredhotels con l'array temporaneo
+  //     $filteredhotels = $temp_hotels;
+  //   }
+
+
+
+  //  if(!empty($_GET['vote'])) {
+  //    $temp_hotels = [];
+
+  //      foreach ($filteredhotels as $hotel) {
+  //       //pusho l'elemento solo se il voto è >= di quello che mi arriva in GET
+  //       if ($hotel['vote'] >= $_GET['vote']) $temp_hotels[] = $hotel;
+        
+  //       }
+
+  //    $filteredhotels = $temp_hotels;
+  //  }
+
+  //MODALITA' CON array_filter senza arrow function
+//ricevo da array_filter l'hotel che viene ciclato
+  function checkParking($hotel) {
+    //la funzione di callback di un array_filter deve restituire true o false
+    //se parking è true sara valido l'array_filter pushando l'elemento in $filteredhotels
+    return $hotel['parking'] == $_GET['parking'];
+  }
+
+
+  function CheckVote($hotel) {
+    //se il voto dell'hotel ciclato è >= al voto in GET la funzione restituisce true altrimenti false
+    return $hotel['vote'] >= $_GET['vote'];
+  }
+
+  if(!empty($_GET['parking']) || (isset($_GET['parking']) && empty($_GET['parking']))) {
+    //array_filter(array_da_filtrare, funzione che restituisce true o false) -> NB la funzione deve essere richiamata tra apici e è lei a passare come paramentro l'elemento ciclato
+    $filteredhotels = array_filter($filteredhotels, 'checkParking');
+  }
 
 
    if(!empty($_GET['vote'])) {
-     $temp_hotels = [];
-
-       foreach ($filteredhotels as $hotel) {
-        //pusho l'elemento solo se il voto è >= di quello che mi arriva in GET
-        if ($hotel['vote'] >= $_GET['vote']) $temp_hotels[] = $hotel;
-        
-        }
-
-     $filteredhotels = $temp_hotels;
+    $filteredhotels = array_filter($filteredhotels, 'checkVote');
    }
 
-   
 ?>
 
 <!DOCTYPE html>
@@ -127,7 +152,7 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="GET" class="row gx-3 gy-2 py-2 m-3 align-items-center">
 
     <div class="col-sm-3">
-        <input class="form-check-input" type="radio" name="parking" id="parking1" value="" checked>
+        <input class="form-check-input" type="radio" name="parking" id="parking1" value="">
         <label class="form-check-label" for="parking1">
         senza parcheggio
         </label>
