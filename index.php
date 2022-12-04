@@ -53,7 +53,51 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
 
     ];
 
+    //di default l'elenco filtrato che circlero' in pagina comprende tutto l'array
+    $filteredhotels = $hotels;
 
+    // var_dump($_SERVER);
+    //var_dump($_GET);
+
+    // verifico se è presnte il dato in $_GET['parking']
+
+
+    if(!empty($_GET['parking'])) {
+      // creare array temporaneo dove salvare l'array filtrato
+      $temp_hotels = [];
+      // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
+      foreach ($filteredhotels as $hotel) {
+        if ($hotel['parking']) $temp_hotels[] = $hotel;
+        }
+      //sostituire $filteredhotels con l'array temporaneo
+      $filteredhotels = $temp_hotels;
+    }
+
+    //se ho scelto senza parcheggio verifico l'esistenza del parametro parking in GET e che sia pero' vuoto
+      if(isset($_GET['parking']) && empty($_GET['parking'])) {
+      // creare array temporaneo dove salvare l'array filtrato
+      $temp_hotels = [];
+      // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
+      foreach ($filteredhotels as $hotel) {
+        if (!$hotel['parking']) $temp_hotels[] = $hotel;
+        }
+      //sostituire $filteredhotels con l'array temporaneo
+      $filteredhotels = $temp_hotels;
+    }
+
+
+
+   if(!empty($_GET['vote'])) {
+     $temp_hotels = [];
+
+       foreach ($filteredhotels as $hotel) {
+        //pusho l'elemento solo se il voto è >= di quello che mi arriva in GET
+        if ($hotel['vote'] >= $_GET['vote']) $temp_hotels[] = $hotel;
+        
+        }
+
+     $filteredhotels = $temp_hotels;
+   }
 
    
 ?>
@@ -78,14 +122,34 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
     }
   </style>
 
-<form action="./index.php" method="GET">
-  <input type="radio" name="no_parking" id="senza parcheggio" value="senza parcheggio">
-  <label for="senza parcheggio">senza parcheggio</label>
-  <input type="radio" name="parking" id="con parcheggio" value="con parcheggio">
-  <label for="con parcheggio">con parcheggio</label>
+<!-- con $_SERVER['PHP_SELF'] faccio puntare il form alla pagina stessa senza dovere scrivere il nome del file -->
+
+<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="GET" class="row gx-3 gy-2 py-2 m-3 align-items-center">
+
+    <div class="col-sm-3">
+        <input class="form-check-input" type="radio" name="parking" id="parking1" value="" checked>
+        <label class="form-check-label" for="parking1">
+        senza parcheggio
+        </label>
+        <input class="form-check-input" type="radio" name="parking" id="parking2" value="1">
+        <label class="form-check-label" for="parking2">
+          con parcheggio
+        </label>
+    </div>
+
+    <div class="col-sm-3">
+        <label for="vote">Voto</label>
+        <input type="number" name="vote" id="vote">
+    </div>
+
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Cerca</button>
+      <button type="reset" class="btn btn-secondary">Annulla</button>
+    </div>
+
 </form>
 
-<table class="table">
+<table class="table m-3">
   <thead>
     <tr>
       <th scope="col">Nome</th>
@@ -96,13 +160,13 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
     </tr>
   </thead>
   <tbody>
-    <?php foreach($hotels as $hotelList):?>
+    <?php foreach($filteredhotels as $hotel):?>
     <tr>
-      <th scope="row"><?php echo $hotelList['name'] ?></th>
-      <td><?php echo $hotelList['description'] ?></td>
-      <td><?php echo $hotelList['parking'] ? 'Si' : 'No' ?></td>
-      <td><?php echo $hotelList['vote'] ?></td>
-      <td><?php echo $hotelList['distance_to_center'] ?></td>
+      <th scope="row"><?php echo $hotel['name'] ?></th>
+      <td><?php echo $hotel['description'] ?></td>
+      <td><?php echo $hotel['parking'] ? 'Si' : 'No' ?></td>
+      <td><?php echo $hotel['vote'] ?></td>
+      <td><?php echo $hotel['distance_to_center'] ?></td>
     </tr>
      <?php endforeach; ?>
   </tbody>
