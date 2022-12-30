@@ -11,6 +11,8 @@ NOTA: deve essere possibile utilizzare entrambi i filtri contemporaneamente (es.
 Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gli hotel.
 Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilità di filtri più evoluti che vedremo domani -->
 
+
+
 <?php
 
     $hotels = [
@@ -79,7 +81,7 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
   //     if(isset($_GET['parking']) && empty($_GET['parking'])) {
   //     // creare array temporaneo dove salvare l'array filtrato
   //     $temp_hotels = [];
-  //     // ciclare tutto l'array e pushare nell'array temp solo gli hotel che hanno il parcheggio
+  //     // ciclare tutto l'array e pushare nell'array temp solo gli hotel che NON hanno il parcheggio
   //     foreach ($filteredhotels as $hotel) {
   //       if (!$hotel['parking']) $temp_hotels[] = $hotel;
   //       }
@@ -101,22 +103,26 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
   //    $filteredhotels = $temp_hotels;
   //  }
 
+
   //MODALITA' CON array_filter senza arrow function
-//ricevo da array_filter l'hotel che viene ciclato
+// array_filter() è una funzione predefinita in PHP che consente di filtrare gli elementi di un array in base a una determinata condizione. La funzione accetta come argomenti l'array da filtrare e una funzione di callback, che viene utilizzata per determinare quali elementi dell'array devono essere mantenuti.
+
+// Vengono definite due funzioni di callback, checkParking() e checkVote(), che verranno utilizzate da array_filter() per filtrare gli elementi di $filteredhotels in base alla presenza di parcheggio o al voto.
+
+// Infine, viene controllato se l'URL contiene il parametro parking o il parametro vote. Se presente, viene utilizzata la funzione array_filter() per filtrare gli elementi di $filteredhotels utilizzando la funzione di callback appropriata.
+
+// Se ad esempio l'URL è http://example.com?parking=true, verranno mantenuti solo gli elementi di $filteredhotels che hanno il campo parking impostato su true. Se invece l'URL è http://example.com?vote=3, verranno mantenuti solo gli elementi di $filteredhotels che hanno il campo vote maggiore o uguale a 3.
+
   function checkParking($hotel) {
-    //la funzione di callback di un array_filter deve restituire true o false
-    //se parking è true sara valido l'array_filter pushando l'elemento in $filteredhotels
     return $hotel['parking'] == $_GET['parking'];
   }
 
 
-  function CheckVote($hotel) {
-    //se il voto dell'hotel ciclato è >= al voto in GET la funzione restituisce true altrimenti false
+  function checkVote($hotel) {
     return $hotel['vote'] >= $_GET['vote'];
   }
 
   if(!empty($_GET['parking']) || (isset($_GET['parking']) && empty($_GET['parking']))) {
-    //array_filter(array_da_filtrare, funzione che restituisce true o false) -> NB la funzione deve essere richiamata tra apici e è lei a passare come paramentro l'elemento ciclato
     $filteredhotels = array_filter($filteredhotels, 'checkParking');
   }
 
@@ -149,7 +155,7 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
 
 <!-- con $_SERVER['PHP_SELF'] faccio puntare il form alla pagina stessa senza dovere scrivere il nome del file -->
 
-<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="GET" class="row gx-3 gy-2 py-2 m-3 align-items-center">
+<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="GET" class="row gx-3 gy-2 py-2 m-3 align-items-center ">
 
     <div class="col-sm-3">
         <input class="form-check-input" type="radio" name="parking" id="parking1" value="">
@@ -174,7 +180,7 @@ Usiamo la logica con le nozioni che abbiamo fino ad ora senza cercare possibilit
 
 </form>
 
-<table class="table m-3">
+<table class="table table-striped m-3">
   <thead>
     <tr>
       <th scope="col">Nome</th>
